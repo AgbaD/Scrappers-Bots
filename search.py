@@ -2,7 +2,8 @@
 # Author:   @BlankGodd_
 
 import requests
-import ast, json
+import ast
+import json
 from bs4 import BeautifulSoup
 import re
 
@@ -88,7 +89,7 @@ class Search_Genius:
             print(k + 1, ':', songs[k][0], 'by', songs[k][2])
 
         print()
-        ranked_song = songs[rank - 1]
+        ranked_song = songs[rank]
         print(ranked_song[0], 'by', ranked_song[2])
         print()
         print('Getting info...')
@@ -119,7 +120,7 @@ class Search_Genius:
 
     def get_song(self, songs, rank):
         information = self.get_song_info(songs, rank)
-        ranked_song = songs[rank - 1]
+        ranked_song = songs[rank]
         song_id = ranked_song[1]
         print()
         print('Getting Lyrics...')
@@ -146,6 +147,8 @@ class Search_Genius:
                     pass
                 j += 1
             i += 1
+            if lyrics:
+                break
 
         try:
             description = information['response']['song']['description']['plain']
