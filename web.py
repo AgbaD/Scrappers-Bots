@@ -23,7 +23,7 @@ class Webpage:
         self.url = 'https://genius.com'
 
     def get_page(self, url):
-        """For retriving a page
+        """For retrieving a page
 
         Params:
             - url: url of page to be retrieved
@@ -31,9 +31,9 @@ class Webpage:
             - response: response from request.get(url)
         """
         headers = {'User-Agent': 'https://github.com/BlankGodd/Blyrics',
-                    'application': 'BLyrics'}
+                   'application': 'BLyrics'}
         i = 0
-        while i < 3: # try reconnecting 2 times if status_Code != 200
+        while i < 3:  # try reconnecting 2 times if status_Code != 200
             try:
                 response = requests.get(url, headers=headers)
                 if response.status_code == 200:
@@ -59,7 +59,7 @@ class Webpage:
         print()
         html = BeautifulSoup(response.text, 'html.parser')
         headline = html.find('div', class_='EditorialPlacement__Title-sc-11ot04a-1 elKqNh').get_text()
-        link =  html.find('a', class_= 'EditorialPlacement__Link-sc-11ot04a-2 bCpoMC')
+        link = html.find('a', class_='EditorialPlacement__Link-sc-11ot04a-2 bCpoMC')
         headline_link = link['href']
 
         other_news_raw = html.find_all('div', class_='EditorialPlacement__Title-sc-11ot04a-1 ABTJt')
@@ -75,7 +75,7 @@ class Webpage:
         print('Request Successful...')
         print()
 
-        headline_d = {headline:headline_link}
+        headline_d = {headline: headline_link}
         other_news_d = {}
         for i in range(len(other_links)):
             other_news_d[other_news[i]] = other_links[i]
@@ -83,7 +83,7 @@ class Webpage:
         articles = (headline_d, other_news_d)
 
         return articles
-    
+
     def get_article(self, article_link):
         """For getting articles content
         
@@ -92,6 +92,7 @@ class Webpage:
         Returns:
             - str: article content
         """
+        print('Getting Article...')
         article = self.get_page(article_link)
         if not article:
             return None
@@ -99,7 +100,7 @@ class Webpage:
         article = html.find('div', class_="article_rich_text_formatting").get_text()
         article = re.sub(r'[\(\[].*?[\)\]]', '', article)
         return article
-       
+
     def get_charts(self):
         """For getting chart of trending songs
 
@@ -126,12 +127,5 @@ class Webpage:
             artists.append(val.text)
         print()
         print('Request Successful...')
-        
+
         return ranks, song_titles, artists
-
-
-
-
-
-
-    

@@ -1,4 +1,5 @@
 # Lyrically
-Get Lyrics, articles and charts, latest information about your favourite artist, songs, etc.
+Get Lyrics, articles, latest information about your favourite artist, songs, etc. 
+directly on your telegram
  
-[lyrically](https://t.me)
+[t.me/blyrics_bot](https://http://t.me/blyrics_bot)
