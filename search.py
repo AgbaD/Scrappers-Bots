@@ -195,7 +195,7 @@ class Search_Genius:
         for i in range(len(all_artist)):
             print(i + 1, all_artist[i][0])
 
-        ranked_artist = all_artist[rank - 1]
+        ranked_artist = all_artist[rank]
         print()
         artist_id = ranked_artist[1]
         print()
