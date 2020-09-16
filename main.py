@@ -19,7 +19,7 @@ t.create_api_token('Lyrically', 'Lyrically', 'https://github.com/BlankGodd/lyric
 
 
 config = json.load(open("config.json"))
-token = config['token']
+token = os.environ.get('TOKEN')
 client = MongoClient(config['db'])
 db = client['lyrically']
 users_db = db.users

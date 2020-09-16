@@ -1,0 +1,17 @@
+{
+  "db": "mongodb://localhost:27017/",
+  "messages": {
+    "start": "Good day {}. Welcome to BLyrics :page_with_curl:.\n I can get you your favorite song lyrics and information, artist information. I can also deliver articles from the genius webpage :nerd_face:.",
+    "menu": "What would you like to search for? :grinning:.\n\n/songs \n/artist \n/articles \n/donate \n/help \n:face_with_monocle: ",
+    "song": "Enter the song title :nerd_face:",
+    "each_song": "Title: {} \nArtist: {} \nRank: {}",
+    "song_final": "Title: {} \nArtist: {} \nRecord Location: {} \nRelease Date: {} \n\nDescription: {}",
+    "artist": "Enter Artist name",
+    "each_artist": "Artist: {}\n Rank: {}",
+    "artist_final1": "Artist: {} \nAlso known as: {} \n\nSocial Media Handles \nTwitter: {}\nInstagram: {}\nFacebook: {}",
+    "artist_final2": "Description: {}\n\nImage: {}",
+    "articles": "Title: {} \nRank: {}",
+    "help": "How to use lyrically :smiley: \n\n /start:  Start the bot \n /songs:  Start searching for songs \n /artist:  Search about an artist \n /articles:  View recent news \n /donate:  Give to Lyrically",
+    "donate": "Lyrically is totally free and open source (https://github.com/BlankGodd/lyrically). You can, however help us maintain our servers and scripts by donating :blush:. \n\n Bitcoin \n1j9VFx719ZkTc84yLUjf9gBhDZXnHDCJv \n\n Ethereum\n0xd180a8cae94a3e7fd01f7fa8e40f6f953f3595ae \n\n Tron\nTPs9ugFXMYxbUdMrfUXsxJiGw8XwAp98Rp"
+    }
+}
