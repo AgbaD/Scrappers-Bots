@@ -49,6 +49,10 @@ def artist(update, context):
                         {"$set": {"recent_command": "artist"}})
 
 
+def articles(update, context):
+    pass
+
+
 def echo(update, context):
     chat_id = update.effective_chat.id
     user = db.users.find_one({"chat_id": chat_id})
@@ -102,8 +106,9 @@ def echo(update, context):
         context.bot.send_message(chat_id,
                                  text=config['messages']['artist_final2'].format(artist['Description'],
                                                                                  artist['image_url']))
-        context.bot.send_message(chat_id,
-                                 text="Songs: {}".format(artist['songs']))
+        context.bot.send_message(chat_id, text="Songs")
+        for val in artist['songs'].values():
+            context.bot.send_message(chat_id, text=val)
 
 
 start_handler = CommandHandler('start', start)
