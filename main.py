@@ -124,7 +124,7 @@ def echo(update, context):
         text = update.message.text
         artists = sg.search_artist(search_str=text)
         update.message.reply_text("Enter artist rank e.g: 1")
-        for i in range(5):
+        for i in range(7):
             update.message.reply_text(config['messages']['each_artist'].format(artists[i][0], i + 1))
         db.users.update_one({"chat_id": chat_id},
                             {"$set": {"recent_command": "get_artist"}})
