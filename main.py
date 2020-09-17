@@ -81,6 +81,11 @@ def donate(update, context):
     update.message.reply_text(emojize(config['messages']['menu']))
 
 
+def hire(update, context):
+    chat_id = update.effective_chat.id
+    update.message.reply_text(emojize(config['messages']['hire']))
+
+
 def echo(update, context):
     chat_id = update.effective_chat.id
     user = db.users.find_one({"chat_id": chat_id})
@@ -169,6 +174,8 @@ help_handler = CommandHandler('help', help_me)
 dispatcher.add_handler(help_handler)
 donate_handler = CommandHandler('donate', donate)
 dispatcher.add_handler(donate_handler)
+hire_handler = CommandHandler('hire', hire)
+dispatcher.add_handler(hire_handler)
 echo_handler = MessageHandler(Filters.text, echo)
 dispatcher.add_handler(echo_handler)
 
