@@ -17,13 +17,11 @@ wp = Webpage()
 t = TelegraphPoster(use_api=True)
 t.create_api_token('Lyrically', 'Lyrically', 'https://github.com/BlankGodd/lyrically')
 
-
 config = json.load(open("config.json"))
 token = os.environ.get('TOKEN')
-PORT = int(os.environ.get('PORT', 5000))
+PORT = os.environ.get('PORT')
 client = MongoClient(config['db'])
 db = client['lyrically']
-users_db = db.users
 
 updater = Updater(token=token, use_context=True)
 dispatcher = updater.dispatcher
@@ -183,11 +181,12 @@ help_handler = CommandHandler('help', help_me)
 dispatcher.add_handler(help_handler)
 donate_handler = CommandHandler('donate', donate)
 dispatcher.add_handler(donate_handler)
-echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
+echo_handler = MessageHandler(Filters.text, echo)
 dispatcher.add_handler(echo_handler)
 
 # updater.start_polling()
 updater.start_webhook(listen="0.0.0.0",
                       port=int(PORT),
                       url_path=token)
-updater.bot.setWebhook('https://lyrically-bot.herokuapp.com/' + token)
+updater.bot.setWebhook("https://lyrically-bot.herokuapp.com/{}".format(token))
+updater.idle()
