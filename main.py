@@ -34,23 +34,20 @@ def start(update, context):
         db.users.insert_one({'chat_id': chat_id, 'recent_command': None,
                              "recent_search": None,
                              'timestamp': datetime.utcnow()})
-    context.bot.send_message(chat_id,
-                             text=emojize(config['messages']['start'].format(name)))
-    context.bot.send_message(chat_id, text=emojize(config['messages']['menu']))
+    update.message.reply_text(emojize(config['messages']['start'].format(name)))
+    update.message.reply_text(emojize(config['messages']['menu']))
 
 
 def songs(update, context):
     chat_id = update.effective_chat.id
-    context.bot.send_message(chat_id,
-                             text=emojize(config['messages']['song']))
+    update.message.reply_text(emojize(config['messages']['song']))
     db.users.update_one({"chat_id": chat_id},
                         {"$set": {"recent_command": "song"}})
 
 
 def artist(update, context):
     chat_id = update.effective_chat.id
-    context.bot.send_message(chat_id,
-                             text=emojize(config['messages']['artist']))
+    update.message.reply_text(emojize(config['messages']['artist']))
     db.users.update_one({"chat_id": chat_id},
                         {"$set": {"recent_command": "artist"}})
 
@@ -62,30 +59,25 @@ def articles(update, context):
                         {"$set": {"recent_command": "articles"}})
     db.users.update_one({"chat_id": chat_id},
                         {"$set": {"recent_search": articles}})
-    context.bot.send_message(chat_id, text="Enter article rank e.g: 1")
+    update.message.reply_text("Enter article rank e.g: 1")
     for k in articles[0].keys():
-        context.bot.send_message(chat_id,
-                                 text="Headline: {} \nRank: 1".format(k))
-    context.bot.send_message(chat_id,
-                             text="Other News")
+        update.message.reply_text("Headline: {} \nRank: 1".format(k))
+    update.message.reply_text("Other News")
     rank = 2
     for k in articles[1].keys():
-        context.bot.send_message(chat_id,
-                                 text=config['messages']['articles'].format(k, rank))
+        update.message.reply_text(config['messages']['articles'].format(k, rank))
         rank += 1
 
 
 def help_me(update, context):
     chat_id = update.effective_chat.id
-    context.bot.send_message(chat_id,
-                             text=emojize(config['messages']['help']))
+    update.message.reply_text(emojize(config['messages']['help']))
 
 
 def donate(update, context):
     chat_id = update.effective_chat.id
-    context.bot.send_message(chat_id,
-                             text=emojize(config['messages']['donate']))
-    context.bot.send_message(chat_id, text=emojize(config['messages']['menu']))
+    update.message.reply_text(emojize(config['messages']['donate']))
+    update.message.reply_text(emojize(config['messages']['menu']))
 
 
 def echo(update, context):
@@ -97,10 +89,9 @@ def echo(update, context):
         text = update.message.text
         rank = 0
         songs = sg.search_song(search_str=text)
-        context.bot.send_message(chat_id, text="Enter song rank e.g: 1")
+        update.message.reply_text("Enter song rank e.g: 1")
         for song in songs:
-            context.bot.send_message(chat_id,
-                                     text=config['messages']['each_song'].format(song[0], song[2], rank + 1))
+            update.message.reply_text(config['messages']['each_song'].format(song[0], song[2], rank + 1))
             rank += 1
         db.users.update_one({"chat_id": chat_id},
                             {"$set": {"recent_command": "get_song"}})
@@ -110,25 +101,25 @@ def echo(update, context):
         rank = update.message.text
         songs = user['recent_search']
         song = sg.get_song(songs=songs, rank=int(rank) - 1)
-        context.bot.send_message(chat_id, text=config['messages']['song_final'].format(song['Title'],
+        update.message.reply_text(config['messages']['song_final'].format(song['Title'],
                                                                                        song['Artist'],
                                                                                        song['recording_location'],
                                                                                        song['release_date'],
                                                                                        song['Description']))
         try:
-            context.bot.send_message(chat_id, text="Lyrics: {}".format(song['Lyrics']))
+            update.message.reply_text("Lyrics: {}".format(song['Lyrics']))
         except BadRequest:
-            context.bot.send_message(chat_id, text="Lyrics too long. You will be sent a link to a webpage. Thanks")
+            update.message.reply_text("Lyrics too long. You will be sent a link to a webpage. Thanks")
             path_url = t.post(title=song['Title'], author="Lyrically", text=song['Lyrics'])
             url = path_url['url']
-            context.bot.send_message(chat_id, text="Lyrics: {}".format(url))
-        context.bot.send_message(chat_id, text=emojize(config['messages']['menu']))
+            update.message.reply_text("Lyrics: {}".format(url))
+        update.message.reply_text(emojize(config['messages']['menu']))
     elif recent_command == 'artist':
         text = update.message.text
         artists = sg.search_artist(search_str=text)
-        context.bot.send_message(chat_id, text="Enter artist rank e.g: 1")
+        update.message.reply_text("Enter artist rank e.g: 1")
         for i in range(5):
-            context.bot.send_message(chat_id, text=config['messages']['each_artist'].format(artists[i][0], i + 1))
+            update.message.reply_text(config['messages']['each_artist'].format(artists[i][0], i + 1))
         db.users.update_one({"chat_id": chat_id},
                             {"$set": {"recent_command": "get_artist"}})
         db.users.update_one({"chat_id": chat_id},
@@ -137,36 +128,32 @@ def echo(update, context):
         rank = update.message.text
         artists = user['recent_search']
         artist = sg.get_artist_info(all_artist=artists, rank=int(rank) - 1)
-        context.bot.send_message(chat_id,
-                                 text=config['messages']['artist_final1'].format(artist['artist_name'],
-                                                                                 artist['Aliases'],
-                                                                                 artist['Twitter Handle'],
-                                                                                 artist['Instagram Handle'],
-                                                                                 artist['Facebook Name']))
-        context.bot.send_message(chat_id,
-                                 text=config['messages']['artist_final2'].format(artist['Description'],
-                                                                                 artist['image_url']))
-        context.bot.send_message(chat_id, text=f"Songs by {artist['artist_name']}")
+        update.message.reply_text(config['messages']['artist_final1'].format(artist['artist_name'],
+                                                                             artist['Aliases'],
+                                                                             artist['Twitter Handle'],
+                                                                             artist['Instagram Handle'],
+                                                                             artist['Facebook Name']))
+        update.message.reply_text(config['messages']['artist_final2'].format(artist['Description'],
+                                                                             artist['image_url']))
+        update.message.reply_text(f"Songs by {artist['artist_name']}")
         for val in artist['songs'].values():
-            context.bot.send_message(chat_id, text=val)
-        context.bot.send_message(chat_id, text=emojize(config['messages']['menu']))
+            update.message.reply_text(val)
+        update.message.reply_text(emojize(config['messages']['menu']))
     elif recent_command == "articles":
         rank = update.message.text
         articles = user['recent_search']
         if rank == '1':
             for k, v in articles[0].items():
                 article = wp.get_article(v)
-                context.bot.send_message(chat_id,
-                                         text="Title: {}\n {}".format(k, article))
+                update.message.reply_text("Title: {}\n {}".format(k, article))
         else:
             titles = [k for k in articles[1].keys()]
             links = [v for v in articles[1].values()]
             rank = int(rank) - 2
             article = wp.get_article(links[rank])
             title = titles[rank]
-            context.bot.send_message(chat_id,
-                                     text="Title: {}\n {}".format(title, article))
-        context.bot.send_message(chat_id, text=emojize(config['messages']['menu']))
+            update.message.reply_text("Title: {}\n {}".format(title, article))
+        update.message.reply_text(emojize(config['messages']['menu']))
 
 
 start_handler = CommandHandler('start', start)
