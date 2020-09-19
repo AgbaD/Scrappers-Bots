@@ -15,7 +15,7 @@ from web import Webpage
 sg = Search_Genius()
 wp = Webpage()
 t = TelegraphPoster(use_api=True)
-t.create_api_token('Lyrically', 'Lyrically', 'https://github.com/BlankGodd/lyrically')
+t.create_api_token('Lyrically', 'Lyrically', 'https://github.com/AgbaD/lyrically')
 
 config = json.load(open("config.json"))
 token = os.environ.get('TOKEN')

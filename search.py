@@ -41,7 +41,7 @@ class Search_Genius:
         params = {'q': search_str}
         access_token = 'Bearer {}'.format(self.access_token)
         headers = {'Authorization': access_token, 'application': 'BLyrics',
-                   'User-Agent': 'https://github.com/BlankGodd/BLyrics'}
+                   'User-Agent': 'https://github.com/AgbaD/BLyrics'}
 
         i = 0
         while i < 3:  # try reconnecting 2 times if status_code != 200
@@ -102,7 +102,7 @@ class Search_Genius:
         params = {'text_format': 'plain'}
         access_token = 'Bearer {}'.format(self.access_token)
         headers = {'Authorization': access_token, 'application': 'BLyrics',
-                   'User-Agent': 'https://github.com/BlankGodd/BLyrics'}
+                   'User-Agent': 'https://github.com/AgbaD/BLyrics'}
         i = 0
         information = None
         while i < 3:
@@ -126,7 +126,7 @@ class Search_Genius:
         print('Getting Lyrics...')
         url = ranked_song[4]
         headers_ = {'application': 'BLyrics',
-                    'User-Agent': 'https://github.com/BlankGodd/BLyrics'}
+                    'User-Agent': 'https://github.com/AgbaD/BLyrics'}
         lyrics = None
         page_title = ''
         i = 0
@@ -206,7 +206,7 @@ class Search_Genius:
         params = {'text_format': 'plain'}
         access_token = 'Bearer {}'.format(self.access_token)
         headers = {'Authorization': access_token, 'application': 'BLyrics',
-                   'User-Agent': 'https://github.com/BlankGodd/BLyrics'}
+                   'User-Agent': 'https://github.com/AgbaD/BLyrics'}
         i = 0
         response = None
         while i < 3:
@@ -267,7 +267,7 @@ class Search_Genius:
         params = {'sort': 'popularity', 'per_page': 23, 'page': 1}
         access_token = 'Bearer {}'.format(self.access_token)
         headers = {'Authorization': access_token, 'application': 'BLyrics',
-                   'User-Agent': 'https://github.com/BlankGodd/BLyrics'}
+                   'User-Agent': 'https://github.com/AgbaD/BLyrics'}
         i = 0
         response = None
         while i < 3:
