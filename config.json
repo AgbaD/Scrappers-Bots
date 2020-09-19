@@ -12,7 +12,7 @@
     "artist_final2": "Description: {}\n\nImage: {}",
     "articles": "Title: {} \nRank: {}",
     "help": "How to use lyrically :smiley: \n\n /start:  Start the bot \n /songs:  Start searching for songs \n /artist:  Search about an artist \n /articles:  View recent news \n /donate:  Give to Lyrically",
-    "donate": "Lyrically is totally free and open source (https://github.com/BlankGodd/lyrically). You can, however help us maintain our servers and scripts by donating :blush:. \n\n Bitcoin \n1j9VFx719ZkTc84yLUjf9gBhDZXnHDCJv \n\n Ethereum\n0xd180a8cae94a3e7fd01f7fa8e40f6f953f3595ae \n\n Tron\nTPs9ugFXMYxbUdMrfUXsxJiGw8XwAp98Rp",
+    "donate": "Lyrically is totally free and open source (https://github.com/AgbaD/lyrically). You can, however help us maintain our servers and scripts by donating :blush:. \n\n Bitcoin \n1j9VFx719ZkTc84yLUjf9gBhDZXnHDCJv \n\n Ethereum\n0xd180a8cae94a3e7fd01f7fa8e40f6f953f3595ae \n\n Tron\nTPs9ugFXMYxbUdMrfUXsxJiGw8XwAp98Rp",
     "hire": "Need a job done in web development, general software development, check up our website at https://damilareagba.surge.sh"
     }
 }
