@@ -101,6 +101,8 @@ def start_echo(update, context):
             title = titles[rank]
             update.message.reply_text("Title: {}\n {}".format(title, article))
         update.message.reply_text(config['messages']['menu'])
+    else:
+        update.message.reply_text(config['messages']['unknown'])
 
     db.users.update_one({"chat_id": chat_id}, {
                         "$set": {"recent_command": None}})
