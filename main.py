@@ -197,9 +197,9 @@ dispatcher.add_handler(hire_handler)
 echo_handler = MessageHandler(Filters.text, echo)
 dispatcher.add_handler(echo_handler)
 
-# updater.start_polling()
-updater.start_webhook(listen="0.0.0.0",
+updater.start_polling()
+"""updater.start_webhook(listen="0.0.0.0",
                       port=int(PORT),
                       url_path=token)
 updater.bot.setWebhook("https://lyrically-bot.herokuapp.com/{}".format(token))
-updater.idle()
+updater.idle()"""
