@@ -69,22 +69,30 @@ def articles(update, context):
         update.message.reply_text(
             config['messages']['articles'].format(k, rank))
         rank += 1
+    db.users.update_one({"chat_id": chat_id}, {
+                        "$set": {"recent_command": None}})
 
 
 def help_me(update, context):
     chat_id = update.effective_chat.id
     update.message.reply_text(config['messages']['help'])
+    db.users.update_one({"chat_id": chat_id}, {
+                        "$set": {"recent_command": None}})
 
 
 def donate(update, context):
     chat_id = update.effective_chat.id
     update.message.reply_text(config['messages']['donate'])
     update.message.reply_text(config['messages']['menu'])
+    db.users.update_one({"chat_id": chat_id}, {
+                        "$set": {"recent_command": None}})
 
 
 def hire(update, context):
     chat_id = update.effective_chat.id
     update.message.reply_text(config['messages']['hire'])
+    db.users.update_one({"chat_id": chat_id}, {
+                        "$set": {"recent_command": None}})
 
 
 def echo(update, context):
@@ -109,11 +117,8 @@ def echo(update, context):
         rank = update.message.text
         songs = user['recent_search']
         song = sg.get_song(songs=songs, rank=int(rank) - 1)
-        update.message.reply_text(config['messages']['song_final'].format(song['Title'],
-                                                                          song['Artist'],
-                                                                          song['recording_location'],
-                                                                          song['release_date'],
-                                                                          song['Description']))
+        update.message.reply_text(config['messages']['song_final'].format(
+            song['Title'], song['Artist'], song['recording_location'], song['release_date'], song['Description']))
         try:
             update.message.reply_text("Lyrics: {}".format(song['Lyrics']))
         except BadRequest:
@@ -139,13 +144,10 @@ def echo(update, context):
         rank = update.message.text
         artists = user['recent_search']
         artist = sg.get_artist_info(all_artist=artists, rank=int(rank) - 1)
-        update.message.reply_text(config['messages']['artist_final1'].format(artist['artist_name'],
-                                                                             artist['Aliases'],
-                                                                             artist['Twitter Handle'],
-                                                                             artist['Instagram Handle'],
-                                                                             artist['Facebook Name']))
-        update.message.reply_text(config['messages']['artist_final2'].format(artist['Description'],
-                                                                             artist['image_url']))
+        update.message.reply_text(config['messages']['artist_final1'].format(
+            artist['artist_name'], artist['Aliases'], artist['Twitter Handle'], artist['Instagram Handle'], artist['Facebook Name']))
+        update.message.reply_text(config['messages']['artist_final2'].format(
+            artist['Description'], artist['image_url']))
         update.message.reply_text(f"Songs by {artist['artist_name']}")
         for val in artist['songs'].values():
             update.message.reply_text(val)
@@ -165,6 +167,8 @@ def echo(update, context):
             title = titles[rank]
             update.message.reply_text("Title: {}\n {}".format(title, article))
         update.message.reply_text(config['messages']['menu'])
+    db.users.update_one({"chat_id": chat_id}, {
+                        "$set": {"recent_command": None}})
 
 
 start_handler = CommandHandler('start', start)
