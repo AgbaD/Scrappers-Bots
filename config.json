@@ -1,5 +1,5 @@
 {
-  "db": "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
+  "db": "mongodb+srv://lyrically:{}@cluster0.qysnh.mongodb.net/<dbname>?retryWrites=true&w=majority\"",
   "messages": {
     "start": "Good day {}. Welcome to BLyrics 🎵📃\nI can get you your favorite song lyrics and information, artist information. I can also deliver articles from the genius webpage 🤓",
     "menu": "What would you like to search for? 😀\n\n/songs \n/artist \n/articles \n/donate \n/hire \n/help \n🧐",
