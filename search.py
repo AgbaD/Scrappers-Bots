@@ -1,6 +1,5 @@
 #!/usr/bin/python
-# Author:   @BlankGodd_
-
+# Author:   @AgbaD
 import re
 import ast
 import json
