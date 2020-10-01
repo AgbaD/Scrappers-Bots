@@ -7,7 +7,6 @@ import os
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from telegram.error import BadRequest
 from pymongo import MongoClient
-from emoji import emojize
 from html_telegraph_poster import TelegraphPoster
 from search import Search_Genius
 from web import Webpage
@@ -15,13 +14,14 @@ from web import Webpage
 sg = Search_Genius()
 wp = Webpage()
 t = TelegraphPoster(use_api=True)
-t.create_api_token('Lyrically', 'Lyrically', 'https://github.com/AgbaD/lyrically')
+t.create_api_token('Lyrically', 'Lyrically',
+                   'https://github.com/AgbaD/lyrically')
 
 config = json.load(open("config.json"))
 token = os.environ.get('TOKEN')
 PORT = os.environ.get('PORT')
-password = os.environ.get('PASSWORD')
-client = MongoClient(config['db'].format(password))
+# password = os.environ.get('PASSWORD')
+client = MongoClient(config['db'])
 db = client['lyrically']
 
 updater = Updater(token=token, use_context=True)
@@ -35,20 +35,20 @@ def start(update, context):
         db.users.insert_one({'chat_id': chat_id, 'recent_command': None,
                              "recent_search": None,
                              'timestamp': datetime.utcnow()})
-    update.message.reply_text(emojize(config['messages']['start'].format(name)))
-    update.message.reply_text(emojize(config['messages']['menu']))
+    update.message.reply_text(config['messages']['start'].format(name))
+    update.message.reply_text(config['messages']['menu'])
 
 
 def songs(update, context):
     chat_id = update.effective_chat.id
-    update.message.reply_text(emojize(config['messages']['song']))
+    update.message.reply_text(config['messages']['song'])
     db.users.update_one({"chat_id": chat_id},
                         {"$set": {"recent_command": "song"}})
 
 
 def artist(update, context):
     chat_id = update.effective_chat.id
-    update.message.reply_text(emojize(config['messages']['artist']))
+    update.message.reply_text(config['messages']['artist'])
     db.users.update_one({"chat_id": chat_id},
                         {"$set": {"recent_command": "artist"}})
 
@@ -66,24 +66,25 @@ def articles(update, context):
     update.message.reply_text("Other News")
     rank = 2
     for k in articles[1].keys():
-        update.message.reply_text(config['messages']['articles'].format(k, rank))
+        update.message.reply_text(
+            config['messages']['articles'].format(k, rank))
         rank += 1
 
 
 def help_me(update, context):
     chat_id = update.effective_chat.id
-    update.message.reply_text(emojize(config['messages']['help']))
+    update.message.reply_text(config['messages']['help'])
 
 
 def donate(update, context):
     chat_id = update.effective_chat.id
-    update.message.reply_text(emojize(config['messages']['donate']))
-    update.message.reply_text(emojize(config['messages']['menu']))
+    update.message.reply_text(config['messages']['donate'])
+    update.message.reply_text(config['messages']['menu'])
 
 
 def hire(update, context):
     chat_id = update.effective_chat.id
-    update.message.reply_text(emojize(config['messages']['hire']))
+    update.message.reply_text(config['messages']['hire'])
 
 
 def echo(update, context):
@@ -97,7 +98,8 @@ def echo(update, context):
         songs = sg.search_song(search_str=text)
         update.message.reply_text("Enter song rank e.g: 1")
         for song in songs:
-            update.message.reply_text(config['messages']['each_song'].format(song[0], song[2], rank + 1))
+            update.message.reply_text(
+                config['messages']['each_song'].format(song[0], song[2], rank + 1))
             rank += 1
         db.users.update_one({"chat_id": chat_id},
                             {"$set": {"recent_command": "get_song"}})
@@ -108,24 +110,27 @@ def echo(update, context):
         songs = user['recent_search']
         song = sg.get_song(songs=songs, rank=int(rank) - 1)
         update.message.reply_text(config['messages']['song_final'].format(song['Title'],
-                                                                                       song['Artist'],
-                                                                                       song['recording_location'],
-                                                                                       song['release_date'],
-                                                                                       song['Description']))
+                                                                          song['Artist'],
+                                                                          song['recording_location'],
+                                                                          song['release_date'],
+                                                                          song['Description']))
         try:
             update.message.reply_text("Lyrics: {}".format(song['Lyrics']))
         except BadRequest:
-            update.message.reply_text("Lyrics too long. You will be sent a link to a webpage. Thanks")
-            path_url = t.post(title=song['Title'], author="Lyrically", text=song['Lyrics'])
+            update.message.reply_text(
+                "Lyrics too long. You will be sent a link to a webpage. Thanks")
+            path_url = t.post(
+                title=song['Title'], author="Lyrically", text=song['Lyrics'])
             url = path_url['url']
             update.message.reply_text("Lyrics: {}".format(url))
-        update.message.reply_text(emojize(config['messages']['menu']))
+        update.message.reply_text(config['messages']['menu'])
     elif recent_command == 'artist':
         text = update.message.text
         artists = sg.search_artist(search_str=text)
         update.message.reply_text("Enter artist rank e.g: 1")
         for i in range(7):
-            update.message.reply_text(config['messages']['each_artist'].format(artists[i][0], i + 1))
+            update.message.reply_text(
+                config['messages']['each_artist'].format(artists[i][0], i + 1))
         db.users.update_one({"chat_id": chat_id},
                             {"$set": {"recent_command": "get_artist"}})
         db.users.update_one({"chat_id": chat_id},
@@ -144,7 +149,7 @@ def echo(update, context):
         update.message.reply_text(f"Songs by {artist['artist_name']}")
         for val in artist['songs'].values():
             update.message.reply_text(val)
-        update.message.reply_text(emojize(config['messages']['menu']))
+        update.message.reply_text(config['messages']['menu'])
     elif recent_command == "articles":
         rank = update.message.text
         articles = user['recent_search']
@@ -159,7 +164,7 @@ def echo(update, context):
             article = wp.get_article(links[rank])
             title = titles[rank]
             update.message.reply_text("Title: {}\n {}".format(title, article))
-        update.message.reply_text(emojize(config['messages']['menu']))
+        update.message.reply_text(config['messages']['menu'])
 
 
 start_handler = CommandHandler('start', start)
@@ -179,9 +184,9 @@ dispatcher.add_handler(hire_handler)
 echo_handler = MessageHandler(Filters.text, echo)
 dispatcher.add_handler(echo_handler)
 
-# updater.start_polling()
-updater.start_webhook(listen="0.0.0.0",
-                      port=int(PORT),
-                      url_path=token)
-updater.bot.setWebhook("https://lyrically-bot.herokuapp.com/{}".format(token))
-updater.idle()
+updater.start_polling()
+# updater.start_webhook(listen="0.0.0.0",
+#                       port=int(PORT),
+#                       url_path=token)
+# updater.bot.setWebhook("https://lyrically-bot.herokuapp.com/{}".format(token))
+# updater.idle()
