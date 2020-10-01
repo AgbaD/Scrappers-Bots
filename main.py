@@ -2,12 +2,13 @@
 # Author: @BlankGodd_
 
 import json
-from datetime import datetime
 import os
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from telegram.error import BadRequest
+import threading
+from datetime import datetime
 from pymongo import MongoClient
 from html_telegraph_poster import TelegraphPoster
+from telegram.error import BadRequest
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from search import Search_Genius
 from web import Webpage
 
@@ -28,74 +29,7 @@ updater = Updater(token=token, use_context=True)
 dispatcher = updater.dispatcher
 
 
-def start(update, context):
-    chat_id = update.effective_chat.id
-    name = update["message"]["chat"]["first_name"]
-    if not db.users.find_one({'chat_id': chat_id}):
-        db.users.insert_one({'chat_id': chat_id, 'recent_command': None,
-                             "recent_search": None,
-                             'timestamp': datetime.utcnow()})
-    update.message.reply_text(config['messages']['start'].format(name))
-    update.message.reply_text(config['messages']['menu'])
-
-
-def songs(update, context):
-    chat_id = update.effective_chat.id
-    update.message.reply_text(config['messages']['song'])
-    db.users.update_one({"chat_id": chat_id},
-                        {"$set": {"recent_command": "song"}})
-
-
-def artist(update, context):
-    chat_id = update.effective_chat.id
-    update.message.reply_text(config['messages']['artist'])
-    db.users.update_one({"chat_id": chat_id},
-                        {"$set": {"recent_command": "artist"}})
-
-
-def articles(update, context):
-    chat_id = update.effective_chat.id
-    articles = wp.check_articles()
-    db.users.update_one({"chat_id": chat_id},
-                        {"$set": {"recent_command": "articles"}})
-    db.users.update_one({"chat_id": chat_id},
-                        {"$set": {"recent_search": articles}})
-    update.message.reply_text("Enter article rank e.g: 1")
-    for k in articles[0].keys():
-        update.message.reply_text("Headline: {} \nRank: 1".format(k))
-    update.message.reply_text("Other News")
-    rank = 2
-    for k in articles[1].keys():
-        update.message.reply_text(
-            config['messages']['articles'].format(k, rank))
-        rank += 1
-    db.users.update_one({"chat_id": chat_id}, {
-                        "$set": {"recent_command": None}})
-
-
-def help_me(update, context):
-    chat_id = update.effective_chat.id
-    update.message.reply_text(config['messages']['help'])
-    db.users.update_one({"chat_id": chat_id}, {
-                        "$set": {"recent_command": None}})
-
-
-def donate(update, context):
-    chat_id = update.effective_chat.id
-    update.message.reply_text(config['messages']['donate'])
-    update.message.reply_text(config['messages']['menu'])
-    db.users.update_one({"chat_id": chat_id}, {
-                        "$set": {"recent_command": None}})
-
-
-def hire(update, context):
-    chat_id = update.effective_chat.id
-    update.message.reply_text(config['messages']['hire'])
-    db.users.update_one({"chat_id": chat_id}, {
-                        "$set": {"recent_command": None}})
-
-
-def echo(update, context):
+def start_echo(update, context):
     chat_id = update.effective_chat.id
     user = db.users.find_one({"chat_id": chat_id})
     recent_command = user["recent_command"]
@@ -167,8 +101,81 @@ def echo(update, context):
             title = titles[rank]
             update.message.reply_text("Title: {}\n {}".format(title, article))
         update.message.reply_text(config['messages']['menu'])
+
     db.users.update_one({"chat_id": chat_id}, {
                         "$set": {"recent_command": None}})
+
+
+def start(update, context):
+    chat_id = update.effective_chat.id
+    name = update["message"]["chat"]["first_name"]
+    if not db.users.find_one({'chat_id': chat_id}):
+        db.users.insert_one({'chat_id': chat_id, 'recent_command': None,
+                             "recent_search": None,
+                             'timestamp': datetime.utcnow()})
+    update.message.reply_text(config['messages']['start'].format(name))
+    update.message.reply_text(config['messages']['menu'])
+
+
+def songs(update, context):
+    chat_id = update.effective_chat.id
+    update.message.reply_text(config['messages']['song'])
+    db.users.update_one({"chat_id": chat_id},
+                        {"$set": {"recent_command": "song"}})
+
+
+def artist(update, context):
+    chat_id = update.effective_chat.id
+    update.message.reply_text(config['messages']['artist'])
+    db.users.update_one({"chat_id": chat_id},
+                        {"$set": {"recent_command": "artist"}})
+
+
+def articles(update, context):
+    chat_id = update.effective_chat.id
+    articles = wp.check_articles()
+    db.users.update_one({"chat_id": chat_id},
+                        {"$set": {"recent_command": "articles"}})
+    db.users.update_one({"chat_id": chat_id},
+                        {"$set": {"recent_search": articles}})
+    update.message.reply_text("Enter article rank e.g: 1")
+    for k in articles[0].keys():
+        update.message.reply_text("Headline: {} \nRank: 1".format(k))
+    update.message.reply_text("Other News")
+    rank = 2
+    for k in articles[1].keys():
+        update.message.reply_text(
+            config['messages']['articles'].format(k, rank))
+        rank += 1
+    db.users.update_one({"chat_id": chat_id}, {
+                        "$set": {"recent_command": None}})
+
+
+def help_me(update, context):
+    chat_id = update.effective_chat.id
+    update.message.reply_text(config['messages']['help'])
+    db.users.update_one({"chat_id": chat_id}, {
+                        "$set": {"recent_command": None}})
+
+
+def donate(update, context):
+    chat_id = update.effective_chat.id
+    update.message.reply_text(config['messages']['donate'])
+    update.message.reply_text(config['messages']['menu'])
+    db.users.update_one({"chat_id": chat_id}, {
+                        "$set": {"recent_command": None}})
+
+
+def hire(update, context):
+    chat_id = update.effective_chat.id
+    update.message.reply_text(config['messages']['hire'])
+    db.users.update_one({"chat_id": chat_id}, {
+                        "$set": {"recent_command": None}})
+
+
+def echo(update, context):
+    thread = threading.Thread(target=start_echo, args=[update, context])
+    thread.start()
 
 
 start_handler = CommandHandler('start', start)
