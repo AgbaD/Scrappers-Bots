@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # Author:   @BlankGodd_
 
+import re
+import ast
 import requests
 from bs4 import BeautifulSoup
-import re, ast
 
 
 class Webpage:
@@ -11,7 +12,7 @@ class Webpage:
 
     def __init__(self):
         """Constructor for Webpage class
-        
+
         Methods:
             - get_page: get the genius home page
             - check_articles: get top 5 articles(names and links)
@@ -48,7 +49,7 @@ class Webpage:
 
     def check_articles(self):
         """For scrapping article title and links
-        
+
         Returns
             - tuple: contains dictionary with title as keys and links as values
         """
@@ -58,12 +59,16 @@ class Webpage:
             return None
         print()
         html = BeautifulSoup(response.text, 'html.parser')
-        headline = html.find('div', class_='EditorialPlacement__Title-sc-11ot04a-1 elKqNh').get_text()
-        link = html.find('a', class_='EditorialPlacement__Link-sc-11ot04a-2 bCpoMC')
+        headline = html.find(
+            'div', class_='EditorialPlacement__Title-sc-11ot04a-1 elKqNh').get_text()
+        link = html.find(
+            'a', class_='EditorialPlacement__Link-sc-11ot04a-2 bCpoMC')
         headline_link = link['href']
 
-        other_news_raw = html.find_all('div', class_='EditorialPlacement__Title-sc-11ot04a-1 ABTJt')
-        other_links_raw = html.find_all('a', class_="EditorialPlacement__Link-sc-11ot04a-2 hyRooK")
+        other_news_raw = html.find_all(
+            'div', class_='EditorialPlacement__Title-sc-11ot04a-1 ABTJt')
+        other_links_raw = html.find_all(
+            'a', class_="EditorialPlacement__Link-sc-11ot04a-2 hyRooK")
 
         other_news = []
         other_links = []
@@ -86,7 +91,7 @@ class Webpage:
 
     def get_article(self, article_link):
         """For getting articles content
-        
+
         Params:
             - article_link: link to article page
         Returns:
@@ -97,7 +102,8 @@ class Webpage:
         if not article:
             return None
         html = BeautifulSoup(article.text, 'html.parser')
-        article = html.find('div', class_="article_rich_text_formatting").get_text()
+        article = html.find(
+            'div', class_="article_rich_text_formatting").get_text()
         article = re.sub(r'[\(\[].*?[\)\]]', '', article)
         return article
 
@@ -113,9 +119,12 @@ class Webpage:
         if not page:
             return None
         html = BeautifulSoup(page.text, 'html.parser')
-        ranks_raw = html.find_all('div', class_="ChartItemdesktop__Rank-sc-3bmioe-1 tDViA")
-        titles_raw = html.find_all('div', class_='ChartSongdesktop__Title-sc-18658hh-3 fODYHn')
-        artists_raw = html.find_all('h4', class_='ChartSongdesktop__Artist-sc-18658hh-5 kiggdb')
+        ranks_raw = html.find_all(
+            'div', class_="ChartItemdesktop__Rank-sc-3bmioe-1 tDViA")
+        titles_raw = html.find_all(
+            'div', class_='ChartSongdesktop__Title-sc-18658hh-3 fODYHn')
+        artists_raw = html.find_all(
+            'h4', class_='ChartSongdesktop__Artist-sc-18658hh-5 kiggdb')
         ranks = []
         song_titles = []
         artists = []

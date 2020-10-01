@@ -1,18 +1,18 @@
 #!/usr/bin/python
 # Author:   @BlankGodd_
 
-import requests
+import re
 import ast
 import json
+import requests
 from bs4 import BeautifulSoup
-import re
 
 
 class Search_Genius:
     """Songs, Artists and Search"""
 
     def __init__(self):
-        """Constructor for search genius 
+        """Constructor for search genius
 
         Methods
             - search: to make a general search
@@ -28,7 +28,7 @@ class Search_Genius:
 
     def search(self, search_str):
         """To make a general query with the api
-        
+
         Params:
             - search_str: value to be searched
         Returns:
@@ -46,7 +46,8 @@ class Search_Genius:
         i = 0
         while i < 3:  # try reconnecting 2 times if status_code != 200
             try:
-                response = requests.get(request_url, params=params, headers=headers)
+                response = requests.get(
+                    request_url, params=params, headers=headers)
                 if response.status_code == 200:
                     return response.text
             except:
@@ -107,7 +108,8 @@ class Search_Genius:
         information = None
         while i < 3:
             try:
-                response = requests.get(request_url, params=params, headers=headers)
+                response = requests.get(
+                    request_url, params=params, headers=headers)
                 if response.status_code == 200:
                     print('Request successful...')
                     information = response.text
@@ -211,7 +213,8 @@ class Search_Genius:
         response = None
         while i < 3:
             try:
-                response = requests.get(request_url, params=params, headers=headers)
+                response = requests.get(
+                    request_url, params=params, headers=headers)
                 if response.status_code == 200:
                     print('Request successful...')
                     print()
@@ -272,7 +275,8 @@ class Search_Genius:
         response = None
         while i < 3:
             try:
-                response = requests.get(request_url, params=params, headers=headers)
+                response = requests.get(
+                    request_url, params=params, headers=headers)
                 if response.status_code == 200:
                     print('Request successful...')
                     print()
