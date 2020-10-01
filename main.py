@@ -104,13 +104,17 @@ def echo(update, context):
                             {"$set": {"recent_search": songs}})
     elif recent_command == "get_song":
         rank = update.message.text
+        try:
+            int(rank)
+        except:
+            update.message.reply_text(config['messages']['unknown'])
         songs = user['recent_search']
         song = sg.get_song(songs=songs, rank=int(rank) - 1)
         update.message.reply_text(config['messages']['song_final'].format(song['Title'],
-                                                                                       song['Artist'],
-                                                                                       song['recording_location'],
-                                                                                       song['release_date'],
-                                                                                       song['Description']))
+                                                                          song['Artist'],
+                                                                          song['recording_location'],
+                                                                          song['release_date'],
+                                                                          song['Description']))
         try:
             update.message.reply_text("Lyrics: {}".format(song['Lyrics']))
         except BadRequest:
@@ -118,7 +122,7 @@ def echo(update, context):
             path_url = t.post(title=song['Title'], author="Lyrically", text=song['Lyrics'])
             url = path_url['url']
             update.message.reply_text("Lyrics: {}".format(url))
-        update.message.reply_text(emojize(config['messages']['menu']))
+        update.message.reply_text(config['messages']['menu'])
     elif recent_command == 'artist':
         text = update.message.text
         artists = sg.search_artist(search_str=text)
@@ -131,6 +135,10 @@ def echo(update, context):
                             {"$set": {"recent_search": artists}})
     elif recent_command == "get_artist":
         rank = update.message.text
+        try:
+            int(rank)
+        except:
+            update.message.reply_text(config['messages']['unknown'])
         artists = user['recent_search']
         artist = sg.get_artist_info(all_artist=artists, rank=int(rank) - 1)
         update.message.reply_text(config['messages']['artist_final1'].format(artist['artist_name'],
