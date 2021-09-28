@@ -3,7 +3,8 @@
 
 import requests
 from bs4 import BeautifulSoup
-import re, ast
+import re
+import ast
 
 
 class Webpage:
