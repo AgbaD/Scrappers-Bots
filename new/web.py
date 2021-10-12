@@ -87,19 +87,3 @@ def get_chart_links(home):
     links = [link["href"] for link in links]
     return links
 
-
-if __name__ == "__main__":
-    print(get_mt())
-    print()
-
-    print()
-    ot = get_ot()
-    for i in range(len(ot)):
-        print(ot[i])
-        print()
-        print()
-
-    chart = get_chart()
-    for i in chart:
-        print(i)
-        print()
