@@ -101,7 +101,7 @@ def echo(update, context):
         db.users.update_one({"chat_id": chat_id},
                             {"$set": {"recent_command": "get_song"}})
         db.users.update_one({"chat_id": chat_id},
-                            {"$set": {"recent_search": songs}})
+                                {"$set": {"recent_search": songs}})
     elif recent_command == "get_song":
         rank = update.message.text
         try:

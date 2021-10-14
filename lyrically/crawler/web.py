@@ -13,6 +13,12 @@ def get_page(url):
     return BeautifulSoup(resp.content, "html.parser")
 
 
+def get_article(link):
+    resp = get_page(link)
+    article = resp.find("div", class_="article_rich_text_formatting").get_text()
+    return re.sub(r'[\(\[].*?[\)\]]', '', article)
+
+
 def get_mt():   # mt = main_title
     home = get_page(base_url)
     mt_div = home.find("div", class_="EditorialPlacement__Title-sc-1kp33kw-1 bMPUfx")
@@ -29,12 +35,6 @@ def get_ma():   # ma = main article
     link = get_ml()
     article = get_article(link)
     return article
-
-
-def get_article(link):
-    resp = get_page(link)
-    article = resp.find("div", class_="article_rich_text_formatting").get_text()
-    return re.sub(r'[\(\[].*?[\)\]]', '', article)
 
 
 def get_ot():   # ot = other_titles
@@ -55,6 +55,20 @@ def get_oa():   # ol = other_articles
     ol = get_ol()
     oa = [get_article(link) for link in ol]
     return oa
+
+
+def get_main():
+    link = get_ml()
+    title = get_mt()
+    article = get_ma()
+    return link, title, article
+
+
+def get_others():
+    links = get_ol()
+    titles = get_ot()
+    articles = get_oa()
+    return links, titles, articles
 
 
 def get_chart():

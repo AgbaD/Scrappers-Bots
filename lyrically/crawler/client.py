@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-access_token = os.getenv('ACCESS_TOKEN')
+access_token = os.getenv('ACCESS_TOKEN') or "YcoOH_J0nOBZCWXVmnUOdPJiM0ln7SwbdClpXj4u_Re8er7_1_wwug_6bx0Znd7V"
 base_url = "https://api.genius.com"
 
 
