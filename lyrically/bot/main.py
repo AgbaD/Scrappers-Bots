@@ -13,7 +13,8 @@ from telegram.ext import CommandHandler, MessageHandler
 
 load_dotenv()
 
-config = json.load(open("config.json"))
+# config = json.load(open("config.json"))
+config = json.load(open("configX.json"))
 token = os.getenv('TOKEN') or config['token']
 password = os.getenv('PASSWORD') or config['password']
 port = os.getenv('PORT') or config['port']
