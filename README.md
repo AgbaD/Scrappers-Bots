@@ -10,8 +10,9 @@ and some bots all written with python
 scrapes the chart for the top songs for the week.
 
 ## Bots
-- [BLyrics Telegram Bot](lyrically/bot)
+- [Lyrics Hub Telegram Bot](lyrically/bot)
 
   A telegram bot to get lyrics, articles and latest information about your favourite artist, songs, etc.
+  It is built on the genius web scrapper and api client
 
 
