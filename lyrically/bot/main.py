@@ -2,9 +2,9 @@ import os
 import json
 import logging
 
-from ..crawler.client import search_song, get_song
-from ..crawler.client import get_artist_id, get_artist
-from ..crawler.web import get_main, get_others
+from crawler.client import search_song, get_song
+from crawler.client import get_artist_id, get_artist
+from crawler.web import get_main, get_others
 
 from dotenv import load_dotenv
 from pymongo import MongoClient
@@ -13,8 +13,8 @@ from telegram.ext import CommandHandler, MessageHandler
 
 load_dotenv()
 
-# config = json.load(open("config.json"))
-config = json.load(open("configX.json"))
+config = json.load(open("config.json"))
+# config = json.load(open("configX.json"))
 token = os.getenv('TOKEN') or config['token']
 password = os.getenv('PASSWORD') or config['password']
 port = os.getenv('PORT') or config['port']
@@ -36,9 +36,9 @@ def start(update, context):
     username = update['message']['chat']['username']
     if not db.users.find_one({'chat_id': chat_id}):
         db.users.insert_one({'chat_id': chat_id, 'recent_command': None,
-                          "recent_search": None, "firstname": firstname,
-                          'timestamp': datetime.utcnow(), "lastname": lastname,
-                          'username': username})
+                             "recent_search": None, "firstname": firstname,
+                             'timestamp': datetime.utcnow(), "lastname": lastname,
+                             'username': username})
 
     context.bot.send_message(chat_id=chat_id, text=config["msg"]["start"].format(firstname))
     context.bot.send_message(chat_id=chat_id, text=config["msg"]["menu"])
@@ -46,7 +46,7 @@ def start(update, context):
 
 def song(update, context):
     chat_id = update.effective_chat.id
-    update.message.reply_text(config['messages']['song'])
+    update.message.reply_text(config['msg']['song'])
     db.users.update_one({"chat_id": chat_id},
                         {"$set": {"recent_command": "song"}})
 
@@ -56,30 +56,6 @@ def artist(update, context):
     update.message.reply_text(config['msg']['artist'])
     db.users.update_one({"chat_id": chat_id},
                         {"$set": {"recent_command": "artist"}})
-
-
-def get_songs(text):
-    rank = 1
-    songs = search_song(text)
-    update.message.reply_text("Enter song rank e.g: 1")
-    for s in songs:
-        update.message.reply_text(config['messages']['each_song'].format(s[1], s[2], rank))
-        rank += 1
-    db.users.update_one({"chat_id": chat_id},
-                        {"$set": {"recent_command": "get_song"}})
-    db.users.update_one({"chat_id": chat_id},
-                        {"$set": {"recent_search": songs}})
-
-
-def get_artists(text):
-    artists = get_artist_id(text)
-    update.message.reply_text("Enter artist rank e.g: 1")
-    for i in range(len(artists)):
-        update.message.reply_text(config['msg']['each_artist'].format(artists.keys()[i], i+1))
-    db.users.update_one({"chat_id": chat_id},
-                        {"$set": {"recent_command": "get_artist"}})
-    db.users.update_one({"chat_id": chat_id},
-                        {"$set": {"recent_search": artists}})
 
 
 def article(update, context):
@@ -98,26 +74,55 @@ def article(update, context):
     ))
     rank += 1
     update.message.reply_text("Other Articles")
-    for i in articles[1]:
+    i = 0
+    j = articles[1]
+    for k in range(len(articles[1][i])):
         update.message.reply_text(config['msg']['articles'].format(
-            i[1][0], rank
+            j[1][k], rank
         ))
         rank += 1
 
 
-def get_one_song(user, rank):
+def get_songs(update, text):
+    chat_id = update.effective_chat.id
+    rank = 1
+    songs = search_song(text)
+    update.message.reply_text(config['msg']['rank'])
+    for s in songs:
+        update.message.reply_text(config['msg']['each_song'].format(s[1], s[2], rank))
+        rank += 1
+    db.users.update_one({"chat_id": chat_id},
+                        {"$set": {"recent_command": "get_song"}})
+    db.users.update_one({"chat_id": chat_id},
+                        {"$set": {"recent_search": songs}})
+
+
+def get_artists(update, text):
+    chat_id = update.effective_chat.id
+    artists = get_artist_id(text)
+    update.message.reply_text(config['msg']['rank'])
+    keys = list(artists.keys())
+    for i in range(len(artists)):
+        update.message.reply_text(config['msg']['each_artist'].format(keys[i], i + 1))
+    db.users.update_one({"chat_id": chat_id},
+                        {"$set": {"recent_command": "get_artist"}})
+    db.users.update_one({"chat_id": chat_id},
+                        {"$set": {"recent_search": artists}})
+
+
+def get_one_song(update, user, rank):
     songs = user['recent_search']
     rank -= 1
     s = songs[rank]
     song_id = s[0]
     s = get_song(id=song_id)
-    update.message.reply_text(config['messages']['song_final'].format(s[1], s[5], s[2], s[3],
+    update.message.reply_text(config['msg']['song_final'].format(s[1], s[5], s[2], s[3],
                                                                       s[4], s[6], s[0]))
 
 
-def get_one_artist(user, rank):
+def get_one_artist(update, user, rank):
     artists = user['recent_search']
-    key = artists.keys()[rank-1]
+    key = list(artists.keys())[rank - 1]
     artist_id = artists[key]
     a = get_artist(artist_id)
     update.message.reply_text(config['msg']['artist_final1'].format(
@@ -126,7 +131,7 @@ def get_one_artist(user, rank):
     update.message.reply_text(config['msg']['artist_final2'].format(a[1]))
 
 
-def get_one_article(user, rank):
+def get_one_article(update, user, rank):
     articles = user['recent_search']
     if rank == 1:
         a = articles[0]
@@ -145,19 +150,16 @@ def get_one_article(user, rank):
 
 
 def help_me(update, context):
-    chat_id = update.effective_chat.id
-    update.message.reply_text(config['messages']['help'])
+    update.message.reply_text(config['msg']['help'])
 
 
 def donate(update, context):
-    chat_id = update.effective_chat.id
-    update.message.reply_text(config['messages']['donate'])
-    update.message.reply_text(config['messages']['menu'])
+    update.message.reply_text(config['msg']['donate'])
+    update.message.reply_text(config['msg']['menu'])
 
 
 def hire(update, context):
-    chat_id = update.effective_chat.id
-    update.message.reply_text(config['messages']['hire'])
+    update.message.reply_text(config['msg']['hire'])
 
 
 def echo(update, context):
@@ -167,31 +169,31 @@ def echo(update, context):
 
     if recent_command == "song":
         text = update.message.text
-        get_songs(text)
+        get_songs(update, text)
     elif recent_command == "get_song":
         rank = None
         try:
             rank = int(update.message.text)
         except Exception as e:
             update.message.reply_text(config['msg']['unknown'])
-        get_one_song(user, rank)
+        get_one_song(update, user, rank)
     elif recent_command == "artist":
         text = update.message.text
-        get_artists(text)
+        get_artists(update, text)
     elif recent_command == 'get_artist':
         rank = None
         try:
             rank = int(update.message.text)
         except Exception as e:
             update.message.reply_text(config['msg']['unknown'])
-        get_one_artist(user, rank)
+        get_one_artist(update, user, rank)
     elif recent_command == "article":
         rank = None
         try:
             rank = int(update.message.text)
         except Exception as e:
             update.message.reply_text(config['msg']['unknown'])
-        get_one_article(user, rank)
+        get_one_article(update, user, rank)
     else:
         update.message.reply_text(config['msg']['unknown'])
 
