@@ -16,4 +16,4 @@ scrapes the chart for the top songs for the week.
   It is built on the genius web scrapper and api client
 
 ## Others
-- [Email Viewer](dcp/README.md)
+- [Email Viewer](dcp/)
