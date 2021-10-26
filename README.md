@@ -15,4 +15,5 @@ scrapes the chart for the top songs for the week.
   A telegram bot to get lyrics, articles and latest information about your favourite artist, songs, etc.
   It is built on the genius web scrapper and api client
 
-
+## Others
+- [Email Viewer](dcp/README.md)
