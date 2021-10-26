@@ -17,3 +17,5 @@ scrapes the chart for the top songs for the week.
 
 ## Others
 - [Email Viewer](dcp/)
+
+  A Python script to view emails based on mail subject given by the user.

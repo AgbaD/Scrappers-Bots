@@ -6,12 +6,8 @@ import re
 import os
 import imaplib
 import email
-import webbrowser
+from getpass import getpass
 from email.header import decode_header
-
-
-username = "blankgodd33@gmail.com"
-password = "mefghjrbuaftxnvc"
 
 
 def clean(text):
@@ -31,19 +27,26 @@ def get_messages(imap, pattern=None):
 	# total number of email
 	messages = int(messages[0])
 
-	for i in range(messages, messages-50, -1):
+	for i in range(messages, messages-700, -1):
 		res, msg = imap.fetch(str(i), '(RFC822)')
 		for response in msg:
 			if isinstance(response, tuple):
 				msg = email.message_from_bytes(response[1])
 				subject, encoding = decode_header(msg["Subject"])[0]
 				if isinstance(subject, bytes):
-					subject = subject.decode(encoding)
+					try:
+						subject = subject.decode(encoding)
+					except:
+						subject = subject.decode()
 				sender, encoding = decode_header(msg.get("From"))[0]
 				if isinstance(sender, bytes):
-					sender = sender.decode(encoding)
+					try:
+						sender = sender.decode(encoding)
+					except:
+						sender = sender.decode()
 				a = 1
 				if re.search(pattern, subject):
+					print(subject, "-----  downloaded")
 					folder = clean(subject)
 					if not os.path.isdir(folder):
 						os.mkdir(folder)
@@ -80,7 +83,21 @@ def close_connection(imap):
 
 
 if __name__ == "__main__":
+	username = input("Enter your email address: ") or "blankgodd33@gmail.com"
+	password = getpass("Enter your password: ") or "zirkxpfvaltvaswo"
 	imap = login(username, password)
-	get_messages(imap, pattern="Daily Coding Problem")
+	print()
+	print("Logging user in....")
+	print()
+	pattern = input("Enter subject pattern: ")
+	print()
+	print("Searching...")
+	print()
+	print("Downloading...")
+	print()
+	get_messages(imap, pattern)
+	print("Search and download complete")
+	print()
+	print("Closing connection...")
 	close_connection(imap)
 
