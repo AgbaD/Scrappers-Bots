@@ -83,8 +83,8 @@ def close_connection(imap):
 
 
 if __name__ == "__main__":
-	username = input("Enter your email address: ") or "blankgodd33@gmail.com"
-	password = getpass("Enter your password: ") or "zirkxpfvaltvaswo"
+	username = input("Enter your email address: ")
+	password = getpass("Enter your password: ")
 	imap = login(username, password)
 	print()
 	print("Logging user in....")
