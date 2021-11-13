@@ -63,6 +63,7 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
+temp_auto_push.bat
 # Flask stuff:
 instance/
 .webassets-cache
@@ -129,3 +130,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.gitignore
+temp_interactive_push.bat
+branch_structure.json
